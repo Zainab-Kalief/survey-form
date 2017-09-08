@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var socket = io.connect()
+
+        $('form').submit(function () {
+          socket.emit('posting_form', {post_data: $(this).serializeArray()})
+          return false
+        })
+        socket.on('update_message', function (data) {
+
+          function append_data(arr, num, id) {
+            for (var i = 0; i < arr.length; i++) {
+              let new_p = document.createElement('p')
+              new_p.innerHTML = arr[i].value
+              document.getElementById(id).appendChild(new_p)
+            }
+            let random_p = document.createElement('p')
+            random_p.innerHTML = num
+            document.getElementById(id).appendChild(random_p)
+          }
+          append_data(data.response, data.random, 'form')
+          
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <div id="form">
+
+    </div>
+    <form action="" method="post">
+      Your Name: <input type="text" name="name" value=""><p></p>
+      Dojo location: <select name="location">
+        <option>Mountain View</option>
+        <option>Bellevue</option>
+        <option>San Jose</option>
+        <option>New York</option>
+      </select><p></p>
+      Favorite language: <select name="language">
+        <option>Python</option>
+        <option>Javascript</option>
+        <option>Swift</option>
+        <option>Java</option>
+      </select><p></p>
+      Comment: <textarea name="comment" rows="8" cols="80"></textarea><p></p>
+      <button>Submit</button>
+    </form>
+  </body>
+</html>
